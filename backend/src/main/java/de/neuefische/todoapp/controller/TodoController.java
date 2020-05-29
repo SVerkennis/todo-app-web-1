@@ -1,9 +1,9 @@
 package de.neuefische.todoapp.controller;
 
 import de.neuefische.todoapp.model.ToDo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.neuefische.todoapp.service.ToDoservice;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,22 @@ import java.util.List;
 
 public class TodoController {
 
-    private final List<ToDo> todos = new ArrayList<>(List.of(
-            new ToDo("12345", "Wait what", "OPEN")
-    ));
+    private final ToDoservice todos;
+
+    @Autowired
+    public TodoController(ToDoservice todos) {
+        this.todos = todos;
+    }
 
     @GetMapping
     public List<ToDo> getTodos() {
-        return todos;
+        return todos.getAllTodos();
+    }
+
+    @PutMapping
+    public ToDo addToDo(@RequestBody ToDo newToDo){
+        todos.addToDo(newToDo);
+        return newToDo;
     }
 
 
